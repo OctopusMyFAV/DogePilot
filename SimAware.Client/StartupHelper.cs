@@ -1,13 +1,8 @@
 using Microsoft.Win32;
-using System;
-using System.Reflection;
+using System.Diagnostics;
 
-namespace SimAware.Client
+namespace DogePilot
 {
-    /// <summary>
-    /// Registers or removes the launcher from the Windows startup registry key
-    /// so it runs automatically when the user logs in.
-    /// </summary>
     public static class StartupHelper
     {
         private const string AppName = "DogePilotLauncher";
@@ -27,13 +22,12 @@ namespace SimAware.Client
         {
             try
             {
-                var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                var exePath = Process.GetCurrentProcess().MainModule?.FileName;
                 if (exePath == null) return;
-
                 using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, true);
                 key?.SetValue(AppName, $"\"{exePath}\"");
             }
-            catch { /* non-fatal */ }
+            catch { }
         }
 
         public static void Remove()
@@ -43,7 +37,7 @@ namespace SimAware.Client
                 using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, true);
                 key?.DeleteValue(AppName, throwOnMissingValue: false);
             }
-            catch { /* non-fatal */ }
+            catch { }
         }
     }
 }

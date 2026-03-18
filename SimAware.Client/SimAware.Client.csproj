@@ -1,10 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <AssemblyName>DogePilot.Client</AssemblyName>
@@ -32,11 +34,9 @@
     <Resource Include="icon.ico" />
     <Resource Include="icon.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
     </Resource>
     <Resource Include="dogepilot.png">
       <Pack>True</Pack>
-      <PackagePath></PackagePath>
     </Resource>
   </ItemGroup>
 

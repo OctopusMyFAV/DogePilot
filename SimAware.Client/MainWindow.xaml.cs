@@ -1,3 +1,4 @@
+using DogePilot;
 ﻿using SimAware.Client.Logic;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace SimAware.Client
     public partial class MainWindow : Window
     {
 
-        private int MinimumUpdatePeriod = 500;
+        
 
         private readonly Random random = new Random();
 

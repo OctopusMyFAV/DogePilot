@@ -86,7 +86,7 @@ Windows starts
 
 ---
 
-## Building from Linux (GitHub Actions — Recommended)
+## How to Build
 
 WPF does not compile on Linux. Use the included GitHub Actions workflow:
 
@@ -98,54 +98,6 @@ WPF does not compile on Linux. Use the included GitHub Actions workflow:
 **Manual trigger:** Actions → `Build for Windows (MSFS2020)` → **Run workflow**
 
 ---
-
-## Building on Windows
-
-### Prerequisites
-- .NET 8 SDK: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
-
-### PowerShell
-
-```powershell
-cd SimAware-MSFS2020
-
-dotnet restore SimAware.sln
-
-# Build the main client
-dotnet publish SimAware.Client/SimAware.Client.csproj `
-  --configuration Release --runtime win-x64 `
-  --self-contained true -p:PublishSingleFile=true `
-  --output ./publish/
-
-# Build the launcher
-dotnet publish SimAware.Launcher/SimAware.Launcher.csproj `
-  --configuration Release --runtime win-x64 `
-  --self-contained true -p:PublishSingleFile=true `
-  --output ./publish/
-
-# Copy SimConnect DLL
-Copy-Item "SimAware.Client/SimConnect.dll" -Destination "./publish/"
-```
-
-Both `.exe` files land in `./publish/` — keep them in the same folder.
-
----
-
-## Building from WSL2
-
-```bash
-/mnt/c/Program\ Files/dotnet/dotnet.exe restore SimAware.sln
-
-/mnt/c/Program\ Files/dotnet/dotnet.exe publish SimAware.Client/SimAware.Client.csproj \
-  --configuration Release --runtime win-x64 \
-  --self-contained true -p:PublishSingleFile=true --output ./publish/
-
-/mnt/c/Program\ Files/dotnet/dotnet.exe publish SimAware.Launcher/SimAware.Launcher.csproj \
-  --configuration Release --runtime win-x64 \
-  --self-contained true -p:PublishSingleFile=true --output ./publish/
-
-cp SimAware.Client/SimConnect.dll ./publish/
-```
 
 > Requires .NET 8 SDK installed on the **Windows side** (not inside WSL).
 

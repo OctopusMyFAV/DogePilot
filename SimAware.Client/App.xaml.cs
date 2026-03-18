@@ -1,3 +1,4 @@
+using DogePilot;
 using System;
 using SimAware.Client.Logic;
 using SimAware.Client.SimConnectFSX;
