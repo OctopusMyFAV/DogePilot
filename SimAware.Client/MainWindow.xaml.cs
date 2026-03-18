@@ -1,4 +1,3 @@
-
 using SimAware.Client.Logic;
 using SimAware.Client.SimConnectFSX;
 using System;
@@ -25,21 +24,23 @@ namespace SimAware.Client
 
         public void RestoreWindow()
         {
-            // nothing to restore - this window stays hidden
-            // DogePilot runs entirely in the tray
+            // tray-only app, nothing to restore
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Stay hidden always
-            Hide();
+            App.Log("MainWindow_Loaded - initializing Discord RPC...");
 
-            viewModel.Callsign = !string.IsNullOrWhiteSpace(App.Config?.Callsign)
+            var callsign = !string.IsNullOrWhiteSpace(App.Config?.Callsign)
                 ? App.Config.Callsign
                 : GenerateCallSign();
 
+            viewModel.Callsign = callsign;
+            App.Log($"Using callsign: {callsign}");
+
             discordRichPresenceLogic.Initialize();
-            discordRichPresenceLogic.Start(viewModel.Callsign ?? GenerateCallSign());
+            discordRichPresenceLogic.Start(callsign);
+            App.Log("Discord RPC initialized and started.");
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e) { }

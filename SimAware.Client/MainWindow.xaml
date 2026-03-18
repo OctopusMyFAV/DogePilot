@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        MouseDown="Window_MouseDown"
         Title="DogePilot"
         Height="1" Width="1"
         WindowStyle="None"
         ShowInTaskbar="False"
-        Visibility="Hidden"
         ResizeMode="NoResize"
-        Left="-9999" Top="-9999">
+        WindowState="Normal"
+        Opacity="0"
+        AllowsTransparency="True"
+        Left="-32000" Top="-32000">
     <Grid/>
 </Window>

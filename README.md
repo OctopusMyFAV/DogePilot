@@ -2,12 +2,11 @@
 
 <img src="dogepilot.png" width="180"/>
 
-# 🐕✈️ DogePilot
+# DogePilot
 
-### such flight. very discord. wow.
+**Discord Rich Presence for Microsoft Flight Simulator 2020**
 
-**Auto Discord Rich Presence for Microsoft Flight Simulator 2020**
-*by soupfhaii_*
+*made by soupfhaii_*
 
 [![Build Status](https://github.com/OctopusMyFAV/DogePilot/actions/workflows/build-windows.yml/badge.svg)](https://github.com/OctopusMyFAV/DogePilot/actions)
 
@@ -15,60 +14,55 @@
 
 ---
 
-## 🐾 wow. what is this?
+## What is this?
 
-> very smart plugin. much automatic. no click needed. wow.
-
-**DogePilot** sits in your system tray and watches for MSFS2020.
-When it sees `FlightSimulator.exe` — it launches itself. When MSFS closes — it stops itself.
-You do nothing. Very lazy. Much perfect. 🐕
+DogePilot is a background app that connects to MSFS2020 and updates your Discord status while you fly. It watches for `FlightSimulator.exe` to start, launches itself automatically, and shuts itself down when you close the sim. You don't have to touch anything.
 
 ---
 
-## ✈️ such features. very wow.
+## Features
 
-```
-🐕  Auto-launches when MSFS2020 starts
-🐕  Auto-closes when MSFS2020 stops
-🐕  Shows your altitude, speed & location on Discord
-🐕  Doge pilot small image on Discord RPC (obviously)
-🐕  Runs at Windows startup (one click)
-🐕  Lives in system tray, stays out of your way
-```
+- Launches automatically when MSFS2020 starts
+- Closes automatically when MSFS2020 stops
+- Shows your altitude, speed and location on Discord
+- Doge pilot shows as the small image on your Discord status
+- Can run at Windows startup so you never have to think about it
+- Sits in the system tray and stays out of your way
 
 ---
 
-## 📦 how install. much easy.
+## Installation
 
-### Step 1 — Get the build
+### Step 1 - Download the build
 
-1. Go to the [**Actions tab**](../../actions)
-2. Click the latest green ✅ run
-3. Scroll down → **Artifacts** → download **`DogePilot-MSFS2020-win-x64.zip`**
-4. Extract to a folder on your Windows machine
+1. Go to the [Actions tab](../../actions)
+2. Click the latest green checkmark run
+3. Scroll down to **Artifacts** and download **`DogePilot-MSFS2020-win-x64.zip`**
+4. Extract it to a folder on your Windows machine
 
-Make sure these are all together:
+Your folder should look like this:
+
 ```
-📁 DogePilot/
- ├── DogePilotLauncher.exe   ← run this one 🐕
+DogePilot/
+ ├── DogePilotLauncher.exe   <-- run this one
  ├── DogePilot.Client.exe
  ├── SimConnect.dll
  ├── dogepilot.png
  ├── icon.ico
- └── config.json             ← auto-created on first run
+ └── config.json             <-- gets created on first run
 ```
 
 ---
 
-### Step 2 — Discord App ID. very important. wow.
+### Step 2 - Set up your Discord App ID
 
-1. Go to 👉 https://discord.com/developers/applications
-2. Click **New Application** → name it `DogePilot` (or whatever)
-3. Sidebar → **Rich Presence → Art Assets**
-   - Upload your image → name it `icon_large`
-   - Upload `dogepilot.png` → name it `dogepilot`
-4. Copy your **Application ID** from **General Information**
-5. Open `config.json` and paste it:
+1. Go to https://discord.com/developers/applications
+2. Click **New Application** and name it whatever you want
+3. Go to **Rich Presence > Art Assets** in the sidebar
+   - Upload an image and name it `icon_large`
+   - Upload `dogepilot.png` and name it `dogepilot`
+4. Copy your **Application ID** from the General Information page
+5. Open `config.json` and paste it in:
 
 ```json
 {
@@ -80,82 +74,72 @@ Make sure these are all together:
 
 ---
 
-### Step 3 — such run. very launch.
+### Step 3 - Run it
 
 1. Run **`DogePilotLauncher.exe`**
-2. Doge appears in your system tray 🐕
-3. Right-click → **Run at Windows Startup**
-4. Never think about it again
-
-> much set and forget. very wow.
+2. A tray icon appears in your taskbar
+3. Right-click it and hit **Run at Windows Startup**
+4. Done. It handles everything from here.
 
 ---
 
-## 🎮 Discord will show this. very flex.
+## What your Discord status looks like
 
-| When | Discord Says |
-|------|-------------|
-| Loading / preflight | `✈️⛅ Doing Pre-flights on MSFS2020` |
-| Flying | `✈ Flying at 35000ft 480kts On MSFS2020` |
-| On ground | `On the ground eating Nasgor ⌛✈️🧑‍✈️` |
-| Near airport | `🧑‍✈️✈️ Flying Near WSSS, Singapore` |
+| Situation | Status |
+|-----------|--------|
+| Loading / preflight | `✈️ Doing Pre-flights on MSFS2020` |
+| In the air | `✈ Flying at 35000ft 480kts On MSFS2020` |
+| On the ground | `On the ground eating Nasgor` |
+| Near an airport | `Flying Near WSSS, Singapore` |
 
-*Small doge pilot image shown on all states. much style.*
+The doge pilot image shows up as the small icon on all of them.
 
 ---
 
-## 🔧 tray icon menu. such options.
+## Tray icon options
 
-| Option | Does what |
-|--------|-----------|
-| Launch DogePilot now | Force launch without waiting for MSFS |
+| Option | What it does |
+|--------|--------------|
+| Launch DogePilot now | Start it without waiting for MSFS |
 | Stop DogePilot | Kill it manually |
-| Run at Windows Startup | Toggle auto-start (uses registry) |
-| Exit Launcher | Stop everything |
+| Run at Windows Startup | Toggle auto-start on login |
+| Exit Launcher | Stop the launcher completely |
 
 ---
 
-## 🏗️ how to build. for nerds only.
+## Building it yourself
 
-### Push to GitHub → Actions builds it automatically
+Just push to GitHub and Actions will build it for you:
 
 ```bash
 git add .
-git commit -m "wow such commit"
+git commit -m "update"
 git push
 ```
 
-Then grab the artifact from the **Actions** tab. That's it.
-No installing dotnet. No compiling. Much easy. Very lazy. 🐕
+Then grab the zip from the **Actions** tab under Artifacts. No need to install anything locally.
 
 ---
 
-## ❓ SimConnect not found?
+## SimConnect not found?
 
 Install it from inside MSFS2020:
 
 ```
-Options → General → Developers → SDK → Install
+Options > General > Developers > SDK > Install
 ```
 
-Then restart DogePilot.
+Restart DogePilot after installing.
 
 ---
 
-## 📜 credits
+## Credits
 
 - Original project by **Arvin Abdollahzadeh** (SimAware)
-- Doge-ified & auto-launcher by **soupfhaii_**
-- Doge image: classic shibe in pilot uniform 🐕✈️
+- Modified and launcher added by **soupfhaii_**
 
 ---
 
 <div align="center">
-
-*such open source. very MIT. wow.*
-
 <img src="dogepilot.png" width="80"/>
-
-**🐕 much fly. very discord. wow. 🐕**
-
 </div>
