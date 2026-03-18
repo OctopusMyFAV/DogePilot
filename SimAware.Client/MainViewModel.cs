@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using SimAware.Common;
 
 namespace SimAware.Client
 {
@@ -33,7 +32,7 @@ namespace SimAware.Client
         private string? callsign = null;
         public string? Callsign { get => callsign; set => SetProperty(ref callsign, value?.Replace("<", "")); }
 
-        private AircraftStatus? aircraftStatus = null;
-        public AircraftStatus? AircraftStatus { get => aircraftStatus; set => SetProperty(ref aircraftStatus, value); }
+        private SimAware.AircraftStatus? aircraftStatus = null;
+        public SimAware.AircraftStatus? AircraftStatus { get => aircraftStatus; set => SetProperty(ref aircraftStatus, value); }
     }
 }

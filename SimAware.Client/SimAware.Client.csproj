@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimAware.Client.Logic\SimAware.Client.Logic.csproj" />
+    <ProjectReference Include="..\SimAware.Common\SimAware.Common.csproj" />
     <ProjectReference Include="..\SimAware.Client.SimConnectFSX\SimAware.Client.SimConnectFSX.csproj" />
   </ItemGroup>
 
@@ -53,7 +54,6 @@
   <ItemGroup>
     <!-- These files are for the Launcher project only, exclude from Client build -->
     <Compile Remove="TrayLauncher.cs" />
-    <Compile Remove="ProcessWatcher.cs" />
     <Compile Remove="StartupHelper.cs" />
   </ItemGroup>
 
