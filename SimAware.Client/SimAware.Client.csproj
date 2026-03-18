@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
+    
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
@@ -47,6 +47,14 @@
     <None Update="dogepilot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <!-- These files are for the Launcher project only, exclude from Client build -->
+    <Compile Remove="TrayLauncher.cs" />
+    <Compile Remove="ProcessWatcher.cs" />
+    <Compile Remove="StartupHelper.cs" />
   </ItemGroup>
 
 </Project>

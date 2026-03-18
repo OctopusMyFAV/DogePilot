@@ -1,4 +1,3 @@
-using DogePilot;
 ﻿using SimAware.Client.Logic;
 using System;
 using System.Collections.Generic;

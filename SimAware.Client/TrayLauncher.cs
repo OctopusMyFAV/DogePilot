@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DogePilot
+namespace SimAware.Client
 {
     public class TrayLauncher : IDisposable
     {

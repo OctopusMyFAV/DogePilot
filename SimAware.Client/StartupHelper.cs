@@ -1,7 +1,7 @@
 using Microsoft.Win32;
 using System.Diagnostics;
 
-namespace DogePilot
+namespace SimAware.Client
 {
     public static class StartupHelper
     {

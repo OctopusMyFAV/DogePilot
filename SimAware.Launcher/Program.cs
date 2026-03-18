@@ -1,5 +1,5 @@
 using System.Windows.Forms;
-using DogePilot;
+using SimAware.Client;
 
 Application.EnableVisualStyles();
 Application.SetCompatibleTextRenderingDefault(false);
