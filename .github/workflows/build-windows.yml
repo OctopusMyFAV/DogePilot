@@ -1,0 +1,52 @@
+name: Build DogePilot for Windows (MSFS2020)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore NuGet packages
+        run: dotnet restore SimAware.sln
+
+      - name: Publish DogePilot.Client (win-x64)
+        run: |
+          dotnet publish SimAware.Client/SimAware.Client.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            --output ./publish/
+
+      - name: Publish DogePilotLauncher (win-x64)
+        run: |
+          dotnet publish SimAware.Launcher/SimAware.Launcher.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            --output ./publish/
+
+      - name: Copy SimConnect DLL
+        run: Copy-Item "SimAware.Client/SimConnect.dll" -Destination "./publish/"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DogePilot-MSFS2020-win-x64
+          path: publish/
+          retention-days: 30

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>..\SimAware.Client\icon.ico</ApplicationIcon>
+    <AssemblyName>DogePilotLauncher</AssemblyName>
+    <Version>1.1.0</Version>
+    <Product>DogePilot Launcher</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Share the same ProcessWatcher, TrayLauncher, StartupHelper, LauncherConfig from the Client project -->
+    <Compile Include="..\SimAware.Client\ProcessWatcher.cs" Link="ProcessWatcher.cs" />
+    <Compile Include="..\SimAware.Client\TrayLauncher.cs" Link="TrayLauncher.cs" />
+    <Compile Include="..\SimAware.Client\StartupHelper.cs" Link="StartupHelper.cs" />
+    <Compile Include="..\SimAware.Client\LauncherConfig.cs" Link="LauncherConfig.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\SimAware.Client\icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>icon.ico</Link>
+    </None>
+  </ItemGroup>
+
+</Project>
