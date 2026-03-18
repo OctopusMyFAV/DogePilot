@@ -1,44 +1,34 @@
 using System;
-using SimAware.Client.Logic;
-using SimAware.Client.SimConnectFSX;
-using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
-using DiscordRPC;
-using System.Diagnostics;
 using System.Windows.Interop;
-using System.Runtime.InteropServices;
-using System.IO;
+using DiscordRPC;
 using DiscordRPC.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using SimAware.Client.Logic;
+using SimAware.Client.SimConnectFSX;
 
 namespace SimAware.Client
 {
     public partial class App : Application
     {
         #region Single Instance Enforcer
-
         readonly SingletonApplicationEnforcer enforcer = new SingletonApplicationEnforcer(args =>
         {
-            Current.Dispatcher.Invoke(() =>
-            {
-                var mainWindow = Current.MainWindow as MainWindow;
-                if (mainWindow != null && args != null)
-                    mainWindow.RestoreWindow();
-            });
+            // already running, do nothing - tray app
         }, "DogePilot");
-
         #endregion
 
-        public ServiceProvider ServiceProvider { get; private set; }
+        public ServiceProvider? ServiceProvider { get; private set; }
 
-        private MainWindow mainWindow = null;
+        private MainWindow? mainWindow = null;
         private IntPtr Handle;
 
-        // Loaded from config.json next to the exe
-        public static LauncherConfig Config { get; private set; }
-
-        // Watches FlightSimulator.exe — auto-exits SimAware when MSFS closes
-        private ProcessWatcher _processWatcher;
+        public static LauncherConfig Config { get; private set; } = new LauncherConfig();
+        private ProcessWatcher? _processWatcher;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -48,16 +38,18 @@ namespace SimAware.Client
                 return;
             }
 
-            // Load config.json (creates it with defaults on first run)
+            // Keep app alive even if all windows are closed (tray app)
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             Config = LauncherConfig.Load();
 
-            // Watch for MSFS exit — close SimAware automatically
+            // Shut down when MSFS closes
             _processWatcher = new ProcessWatcher();
             _processWatcher.SimulatorExited += (s, ev) =>
             {
                 Dispatcher.Invoke(() =>
                 {
-                    Debug.WriteLine("MSFS exited — shutting down SimAware.");
+                    Debug.WriteLine("MSFS exited - shutting down DogePilot.");
                     Shutdown();
                 });
             };
@@ -69,6 +61,8 @@ namespace SimAware.Client
 
             mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Loaded += MainWindow_Loaded;
+
+            // Don't call Show() - window stays hidden, we just need its HWND for SimConnect
             mainWindow.Show();
         }
 
@@ -78,10 +72,6 @@ namespace SimAware.Client
             services.AddSingleton<IFlightConnector, MicrosoftSimConnection>();
             services.AddTransient(typeof(MainWindow));
 
-            // Discord App ID is read from config.json
-            // TODO: Set your Discord Application Client ID in config.json
-            // Create your app at: https://discord.com/developers/applications
-            // Then add a Rich Presence asset named "icon_large" under Art Assets
             var discordRpcClient = new DiscordRpcClient(Config.DiscordAppId);
             discordRpcClient.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
             discordRpcClient.OnReady += (sender, e) =>
@@ -101,16 +91,16 @@ namespace SimAware.Client
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var flightConnector = ServiceProvider.GetService<IFlightConnector>();
+            var flightConnector = ServiceProvider?.GetService<IFlightConnector>();
             if (flightConnector is MicrosoftSimConnection simConnect)
             {
                 simConnect.Closed += SimConnect_Closed;
 
-                Handle = new WindowInteropHelper(sender as Window).Handle;
-                var HandleSource = HwndSource.FromHwnd(Handle);
-                HandleSource.AddHook(simConnect.HandleSimConnectEvents);
+                Handle = new WindowInteropHelper(mainWindow).Handle;
+                var handleSource = HwndSource.FromHwnd(Handle);
+                handleSource?.AddHook(simConnect.HandleSimConnectEvents);
 
-                var viewModel = ServiceProvider.GetService<MainViewModel>();
+                var viewModel = ServiceProvider?.GetService<MainViewModel>();
 
                 try
                 {
@@ -118,59 +108,45 @@ namespace SimAware.Client
                 }
                 catch (BadImageFormatException)
                 {
-                    var result = MessageBox.Show(mainWindow,
-                        @"SimConnect has not been detected. This is essential to connect to Microsoft Flight Simulator.
-
-Do you want to install it now?
-When installation is complete, please restart.",
-                        "Missing Core Framework",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Error);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        try
-                        {
-                            Process.Start(new ProcessStartInfo
-                            {
-                                FileName = Path.Combine(Path.GetDirectoryName(
-                                    System.Reflection.Assembly.GetExecutingAssembly().Location), "SimConnect.msi"),
-                                UseShellExecute = true
-                            });
-                        }
-                        catch { }
-                    }
-
-                    Shutdown(-1);
+                    // SimConnect DLL missing - notify but DON'T shutdown, stay in tray
+                    MessageBox.Show(
+                        "SimConnect was not found.\n\nPlease install it from MSFS2020:\nOptions > General > Developers > SDK > Install\n\nThen restart DogePilot.",
+                        "DogePilot - SimConnect Missing",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    // Don't shutdown - user can fix it and restart manually from tray
                 }
             }
         }
 
-        private async Task InitializeSimConnectAsync(MicrosoftSimConnection simConnect, MainViewModel viewModel)
+        private async Task InitializeSimConnectAsync(MicrosoftSimConnection simConnect, MainViewModel? viewModel)
         {
             while (true)
             {
                 try
                 {
-                    viewModel.SimConnectionState = ConnectionState.Connecting;
+                    if (viewModel != null) viewModel.SimConnectionState = ConnectionState.Connecting;
                     simConnect.Initialize(Handle, slowMode: false);
-                    viewModel.SimConnectionState = ConnectionState.Connected;
+                    if (viewModel != null) viewModel.SimConnectionState = ConnectionState.Connected;
+                    Debug.WriteLine("SimConnect connected.");
                     break;
                 }
                 catch (COMException)
                 {
-                    viewModel.SimConnectionState = ConnectionState.Failed;
+                    // MSFS not ready yet - keep retrying silently every 5 seconds
+                    if (viewModel != null) viewModel.SimConnectionState = ConnectionState.Failed;
                     await Task.Delay(5000).ConfigureAwait(true);
                 }
             }
         }
 
-        private async void SimConnect_Closed(object sender, EventArgs e)
+        private async void SimConnect_Closed(object? sender, EventArgs e)
         {
             var simConnect = sender as MicrosoftSimConnection;
-            var viewModel = ServiceProvider.GetService<MainViewModel>();
-            viewModel.SimConnectionState = ConnectionState.Idle;
-            await InitializeSimConnectAsync(simConnect, viewModel).ConfigureAwait(true);
+            var viewModel = ServiceProvider?.GetService<MainViewModel>();
+            if (viewModel != null) viewModel.SimConnectionState = ConnectionState.Idle;
+            if (simConnect != null)
+                await InitializeSimConnectAsync(simConnect, viewModel).ConfigureAwait(true);
         }
     }
 }

@@ -1,82 +1,59 @@
-﻿using SimAware.Client.Logic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using SimAware.Client.Logic;
 using SimAware.Client.SimConnectFSX;
+using System;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
 
 namespace SimAware.Client
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-
-        
-
         private readonly Random random = new Random();
-
         private readonly MainViewModel viewModel;
         private readonly DiscordRichPresenceLogic discordRichPresenceLogic;
         private readonly IFlightConnector flightConnector;
+
         public MainWindow(IFlightConnector flightConnector, MainViewModel viewModel, DiscordRichPresenceLogic discordRichPresenceLogic)
         {
             InitializeComponent();
-
             this.flightConnector = flightConnector;
             this.viewModel = viewModel;
             this.discordRichPresenceLogic = discordRichPresenceLogic;
-
-
         }
 
         public void RestoreWindow()
         {
-            Show();
-            WindowState = WindowState.Normal;
-            Activate();
+            // nothing to restore - this window stays hidden
+            // DogePilot runs entirely in the tray
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.Title = "DogePilot";
+            // Stay hidden always
+            Hide();
 
-            // Use callsign from config.json, fall back to random
             viewModel.Callsign = !string.IsNullOrWhiteSpace(App.Config?.Callsign)
                 ? App.Config.Callsign
                 : GenerateCallSign();
 
             discordRichPresenceLogic.Initialize();
-            discordRichPresenceLogic.Start(viewModel.Callsign);
+            discordRichPresenceLogic.Start(viewModel.Callsign ?? GenerateCallSign());
         }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
-        }
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e) { }
 
         private string GenerateCallSign()
         {
-            var builder = new StringBuilder();
-            builder.Append(((char)('A' + random.Next(26))).ToString());
-            builder.Append(((char)('A' + random.Next(26))).ToString());
-            builder.Append("-");
-            builder.Append(((char)('A' + random.Next(26))).ToString());
-            builder.Append(((char)('A' + random.Next(26))).ToString());
-            builder.Append(((char)('A' + random.Next(26))).ToString());
-            return builder.ToString();
+            var b = new StringBuilder();
+            b.Append((char)('A' + random.Next(26)));
+            b.Append((char)('A' + random.Next(26)));
+            b.Append('-');
+            b.Append((char)('A' + random.Next(26)));
+            b.Append((char)('A' + random.Next(26)));
+            b.Append((char)('A' + random.Next(26)));
+            return b.ToString();
         }
     }
 }

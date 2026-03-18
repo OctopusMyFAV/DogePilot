@@ -3,35 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SimAware.Client"
-        mc:Ignorable="d" Loaded="Window_Loaded"
-        Title="DogePilot" Height="500" Width="500"
-        ResizeMode="NoResize">
-    <Grid Background="#1a1a2e">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,20,20,10">
-            <Image Height="64" Width="64" Source="/icon.png"
-                   RenderOptions.BitmapScalingMode="HighQuality"
-                   VerticalAlignment="Center" Margin="0,0,14,0"/>
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="DogePilot" FontSize="24" FontWeight="Bold"
-                           Foreground="White" FontFamily="Segoe UI"/>
-                <TextBlock Text="MSFS2020 Discord Rich Presence"
-                           FontSize="12" Foreground="#aaaacc" FontFamily="Segoe UI"/>
-            </StackPanel>
-        </StackPanel>
-
-        <!-- Status area -->
-        <Border Grid.Row="1" Margin="20,0,20,20" CornerRadius="8"
-                Background="#16213e" BorderBrush="#0f3460" BorderThickness="1">
-            <TextBlock Text="Connecting to MSFS2020..."
-                       Foreground="#aaaacc" FontFamily="Segoe UI" FontSize="13"
-                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        </Border>
-    </Grid>
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        MouseDown="Window_MouseDown"
+        Title="DogePilot"
+        Height="1" Width="1"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Visibility="Hidden"
+        ResizeMode="NoResize"
+        Left="-9999" Top="-9999">
+    <Grid/>
 </Window>
